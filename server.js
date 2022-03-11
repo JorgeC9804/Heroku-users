@@ -18,7 +18,7 @@ sequelize
   .catch(err => console.log(err));
 
 // const PORT = process.env.PORT || 4000
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 /**
  * Cualquier servicio que nos brindan, siempre hay que buscar el
  * servio o la variable PORT
