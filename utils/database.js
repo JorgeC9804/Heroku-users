@@ -6,6 +6,14 @@ dotenv.config({ path: "./config.env" });
  * path lo mandamos directo a la raiz
  */
 const sequelize = new Sequelize({
+  /**
+   * Aqui nos estamos conectado a la base de datos de
+   * pgAdm mediante localhost
+   *
+   * Y si conectamos dilectOptions
+   * le indicamos a al servidor que se conectara a la
+   * base de datos de heroku
+   */
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -14,12 +22,12 @@ const sequelize = new Sequelize({
   dialect: "postgres",
   logging: false,
   // parte de Heroku que necesita sequelize para conectarse a produccion
-  /*dialectOptions: {
+  dialectOptions: {
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
-  } /**/
+  } /**/,
 });
 
 /* Host ec2-44-193-188-118.compute-1.amazonaws.com
