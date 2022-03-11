@@ -13,13 +13,13 @@ const sequelize = new Sequelize({
   database: process.env.DB,
   dialect: "postgres",
   logging: false,
-  // parte de Heroku que neceista sequelize para conectarse a produccion
-  dialectOptions: {
+  // parte de Heroku que necesita sequelize para conectarse a produccion
+  /**/ dialectOptions: {
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
-  },
+  } /**/,
 });
 
 /* Host ec2-44-193-188-118.compute-1.amazonaws.com

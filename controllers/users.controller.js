@@ -2,6 +2,9 @@ const { User } = require("../models/user.model");
 const { Address } = require("../models/address.model");
 const { Post } = require("../models/post.model");
 const { Comments } = require("../models/comment.models");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
 //captura errors
 /**
@@ -12,6 +15,8 @@ const { Comments } = require("../models/comment.models");
 //Utils
 const { catchAsync } = require("../utils/catchAsync");
 const { AppError } = require("../utils/appError");
+
+dotenv.config({ path: "./config.env" });
 
 exports.getUsers = catchAsync(async (req, res, next) => {
   // SELECT * FROM users
@@ -90,14 +95,97 @@ exports.createUser = catchAsync(async (req, res, next) => {
     return new AppError(400, "Must provide a valid name, email and password");
   }
 
+  const salt = await bcrypt.genSalt(12);
+
+  const hashPassword = await bcrypt.hash(password, salt);
+
   const newUser = await User.create({
     name,
     email,
-    password,
+    password: hashPassword,
+    /**
+     * a create le pasamos los parametros y le indicamos
+     * que password tendra una password encriptado
+     */
   });
+  /**
+   * Es una referencia, no la informacion como tal
+   * por eso podemos ocultar o poner undefined, o asignar
+   * para quitar la propiedad
+   */
+
+  newUser.password = undefined;
 
   res.status(201).json({
     status: "success",
     data: { newUser },
+  });
+});
+
+exports.loginUser = catchAsync(async (req, res, next) => {
+  /**
+   * Primero vamos a corregir alguna ideas erroneas que tenemso
+   * Post no es para guardar informacion, post nos ayuda a capturar informacion
+   * no necesariamente es para crear nueva informacion
+   * En este punto, se ingresara informacion desde el cliente, y se utilizara axios para
+   * capturar esa informacion y mandarla mediante los parametros de axios que accede a nuestro
+   * backend.
+   * Al mismo tiempo nuestro backend hara una peticion a la base de datos para indicarle que
+   * compare los datos ingresados
+   * con la informacion que tiene guardada
+   * Comparar email database con email ingresado
+   * pass1234 === $ddnj3jdnjldlaauwbnWAFRKJe
+   */
+
+  const { email, password } = req.body;
+
+  // Find user given an email and has status active
+  const user = await User.findOne({
+    where: { email },
+    // where: { email, status: "active" },
+    /**
+     * Si encontramos a email, es porque existe esa informacion
+     * y nos almacena en user toda la informacion
+     * { user, password, email } = user;
+     * o de igal forma acceder direccto con user
+     * user.user, user.password, user.email
+     */
+  });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return next(new AppError(404, "Credential are invalid"));
+  }
+
+  /*
+  if (!user) {
+    return next(new AppError(404, "Email invalid"));
+  }
+
+  // Compare entered password vs hashed password
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    return next(new AppError(400, "Password is not valid"));
+  }
+
+  */
+
+  // Generate credential that validates user session (token)
+  // 1. Validate session
+  // 2. Grant access a certain parts of our API
+  // 3. Restrict access
+
+  // Create jwt
+  /**
+   * user.id
+   */
+  //                     forma: string
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: { token },
   });
 });

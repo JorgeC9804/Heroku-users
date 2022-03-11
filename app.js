@@ -33,7 +33,7 @@ app.use("/api/v1/comment", commentRouter);
 
 app.use("*", (req, res, next) => {
   // console.log("Not valid URL");
-  next(new AppError(404, `${req.originalUrl} not found in thi server`));
+  next(new AppError(404, `${req.originalUrl} not found in this server`));
 });
 
 // Error handler (err -> AppError)
