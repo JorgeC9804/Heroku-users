@@ -82,6 +82,8 @@ exports.getUserById = catchAsync(async (req, res, next) => {
      */
   }
 
+  user.password = undefined;
+
   res.status(200).json({
     status: "success",
     data: { user },
@@ -150,13 +152,14 @@ exports.loginUser = catchAsync(async (req, res, next) => {
      * o de igal forma acceder direccto con user
      * user.user, user.password, user.email
      */
+    attributes: { exclude: [""] }, // va a excluir el password
   });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return next(new AppError(404, "Credential are invalid"));
   }
 
-  /*
+  /* */
   if (!user) {
     return next(new AppError(404, "Email invalid"));
   }
@@ -168,7 +171,7 @@ exports.loginUser = catchAsync(async (req, res, next) => {
     return next(new AppError(400, "Password is not valid"));
   }
 
-  */
+  /**/
 
   // Generate credential that validates user session (token)
   // 1. Validate session
@@ -180,9 +183,10 @@ exports.loginUser = catchAsync(async (req, res, next) => {
    * user.id
    */
   //                     forma: string
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+  const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+  jwt.verify(token, process.env.JWT_SECRET);
 
   res.status(200).json({
     status: "success",

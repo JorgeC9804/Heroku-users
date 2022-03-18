@@ -13,7 +13,7 @@ sequelize
 initModels();
 
 sequelize
-  .sync()
+  .sync() // { force: true } crear a cada rato las tablas
   .then(() => console.log("Database synced"))
   .catch(err => console.log(err));
 

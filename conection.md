@@ -24,3 +24,7 @@ dialectOptions: {
       require: true,
       rejectUnauthorized: false,
     },
+
+"name": "weny"
+"email": "wendy@academlo.com",
+"password": "wendy1234"

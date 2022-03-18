@@ -11,7 +11,7 @@ const sequelize = new Sequelize({
    * pgAdm mediante localhost
    *
    * Y si conectamos dilectOptions
-   * le indicamos a al servidor que se conectara a la
+   * le indicamos al servidor que se conectara a la
    * base de datos de heroku
    */
   host: process.env.DB_HOST,
@@ -22,7 +22,7 @@ const sequelize = new Sequelize({
   dialect: "postgres",
   logging: false,
   // parte de Heroku que necesita sequelize para conectarse a produccion
-  dialectOptions: {
+  /**/ dialectOptions: {
     ssl: {
       require: true,
       rejectUnauthorized: false,

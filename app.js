@@ -23,6 +23,8 @@ app.use(cors());
 
 // Enable JSON incoming data
 app.use(express.json());
+// Enable multipart/form-data incoming data (to receive files)
+app.use(express.urlencoded({ extended: true })); //
 
 // Middlewares
 
