@@ -50,7 +50,7 @@ exports.validateSession = catchAsync(async (req, res, next) => {
        * o mostrar cierta informacion
        * - se encierra en un arreglo, para que obtenga
        */
-      include: ["id", ""], // decirle que columnas incluya, o
+      // include: ["id", ""], // decirle que columnas incluya, o
       exclude: ["password"], // va a excluir el password
     },
   });

@@ -152,7 +152,7 @@ exports.loginUser = catchAsync(async (req, res, next) => {
      * o de igal forma acceder direccto con user
      * user.user, user.password, user.email
      */
-    attributes: { exclude: [""] }, // va a excluir el password
+    // attributes: { exclude: ["password"] }, // va a excluir el password
   });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
