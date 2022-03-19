@@ -16,7 +16,7 @@ const {
 
 const router = express.Router();
 
-router.get("/", validateSession, getUsers);
+router.get("/", getUsers);
 
 router.get("/:id", validateSession, getUserById);
 
