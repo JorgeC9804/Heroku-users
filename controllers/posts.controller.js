@@ -33,17 +33,15 @@ exports.createPost = async (req, res) => {
   try {
     const { title, content, userId } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
-    console.table(req.file);
+    // console.table(req.file);
 
     // add error
 
     const imgRef = ref(storage, req.file.originalname);
 
     const result = uploadBytes(imgRef, req.file);
-
-    console.log();
 
     const newPost = await Post.create({
       title,

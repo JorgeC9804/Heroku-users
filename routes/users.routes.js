@@ -7,6 +7,7 @@ const {
   getUserById,
   getUsers,
   loginUser,
+  logUser,
 } = require("../controllers/users.controller");
 
 /**
@@ -15,12 +16,17 @@ const {
 
 const router = express.Router();
 
-router.get("/", getUsers);
+router.get("/", validateSession, getUsers);
 
-router.get("/:id", getUserById);
+router.get("/:id", validateSession, getUserById);
 
 router.post("/", createUser);
 
 router.post("/login", loginUser);
+
+/**
+ * My start
+ */
+router.post("/login-res", logUser);
 
 module.exports = { userRouter: router };

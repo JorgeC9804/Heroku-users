@@ -124,6 +124,27 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.logUser = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body.login;
+  console.log(req.body.login);
+
+  const user = await User.findOne({
+    where: { email },
+    // ocurre un error al excluir password
+  });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return next(new AppError(404, "Credential are invalid"));
+  }
+
+  user.password = undefined;
+
+  res.status(200).json({
+    status: "success",
+    data: { user },
+  });
+});
+
 exports.loginUser = catchAsync(async (req, res, next) => {
   /**
    * Primero vamos a corregir alguna ideas erroneas que tenemso
@@ -141,6 +162,7 @@ exports.loginUser = catchAsync(async (req, res, next) => {
 
   const { email, password } = req.body;
 
+  console.log(req.body);
   // Find user given an email and has status active
   const user = await User.findOne({
     where: { email },
