@@ -125,8 +125,8 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 
 exports.logUser = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body.login;
-  console.log(req.body.login);
+  const { email, password } = req.body;
+  console.log(req.body);
 
   const user = await User.findOne({
     where: { email },
